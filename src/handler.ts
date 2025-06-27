@@ -17,7 +17,17 @@ export default class Handler {
 			);
 			return;
 		}
-		await this.monthly.tryToCreatePeriodicNote(moment(tarDate), false);
+		const tarDateMoment = moment(tarDate);
+		const existingNote = await this.monthly.tryToGetExistingPeriodicNote(
+			tarDateMoment
+		);
+		if (existingNote) {
+			await this.plugin.app.workspace
+				.getLeaf(false)
+				.openFile(existingNote, { active: true });
+		} else {
+			await this.monthly.tryToCreatePeriodicNote(tarDateMoment, false);
+		}
 	}
 
 	addMonthClickListener() {

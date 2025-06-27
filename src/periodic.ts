@@ -21,6 +21,16 @@ export class Periodic {
 		this.type = type;
 	}
 
+	async tryToGetExistingPeriodicNote(date: Moment): Promise<TFile | null> {
+		const filename = date.format(this.format);
+		const path = this.folder
+			? `${this.folder}/${filename}.md`
+			: `${filename}.md`;
+		const file = this.plugin.app.vault.getFileByPath(path);
+
+		return file;
+	}
+
 	async tryToCreatePeriodicNote(
 		date: Moment,
 		inNewSplit: boolean,
