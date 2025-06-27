@@ -6,7 +6,6 @@ import {
 	PluginSettingTab,
 	Setting,
 } from "obsidian";
-import { normalize } from "path";
 
 // Remember to rename these classes and interfaces!
 
