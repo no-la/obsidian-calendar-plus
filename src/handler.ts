@@ -12,6 +12,40 @@ export default class Handler {
 		this.yearly = new Yearly(this.plugin);
 	}
 
+	addMonthClickListener() {
+		const monthEl = this.getMonthElement();
+		if (!monthEl) {
+			new Notice(
+				'Month element not found.\nPlease check if the "Calendar" plugin is enabled.'
+			);
+			return;
+		}
+
+		monthEl.addClass("calendar-plus-button");
+		this.plugin.registerDomEvent(
+			monthEl,
+			"click",
+			this.clickMonthHandler.bind(this)
+		);
+	}
+
+	addYearClickListener() {
+		const yearEl = this.getYearElement();
+		if (!yearEl) {
+			new Notice(
+				'Month element not found.\nPlease check if the "Calendar" plugin is enabled.'
+			);
+			return;
+		}
+
+		yearEl.addClass("calendar-plus-button");
+		this.plugin.registerDomEvent(
+			yearEl,
+			"click",
+			this.clickYearHandler.bind(this)
+		);
+	}
+
 	async clickMonthHandler(e: MouseEvent): Promise<void> {
 		const tarDate = this.getTargetDate();
 		if (!tarDate) {
@@ -33,22 +67,6 @@ export default class Handler {
 		}
 	}
 
-	addMonthClickListener() {
-		const monthEl = this.getMonthElement();
-		if (!monthEl) {
-			new Notice(
-				'Month element not found.\nPlease check if the "Calendar" plugin is enabled.'
-			);
-			return;
-		}
-
-		this.plugin.registerDomEvent(
-			monthEl,
-			"click",
-			this.clickMonthHandler.bind(this)
-		);
-	}
-
 	async clickYearHandler(e: MouseEvent): Promise<void> {
 		const tarDate = this.getTargetDate();
 		if (!tarDate) {
@@ -68,22 +86,6 @@ export default class Handler {
 		} else {
 			await this.yearly.tryToCreatePeriodicNote(tarDateMoment, false);
 		}
-	}
-
-	addYearClickListener() {
-		const yearEl = this.getYearElement();
-		if (!yearEl) {
-			new Notice(
-				'Month element not found.\nPlease check if the "Calendar" plugin is enabled.'
-			);
-			return;
-		}
-
-		this.plugin.registerDomEvent(
-			yearEl,
-			"click",
-			this.clickYearHandler.bind(this)
-		);
 	}
 
 	getMonthElement(): HTMLElement | null {
