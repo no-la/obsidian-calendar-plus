@@ -17,9 +17,7 @@ export default class Handler {
 			moment(tarDate),
 			false,
 			this.plugin.app.workspace,
-			(newFile) => {
-				new Notice(`Monthly note created: ${newFile.name}`);
-			}
+			this.plugin.app.vault
 		);
 	}
 
