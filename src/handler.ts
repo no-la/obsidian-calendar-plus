@@ -43,7 +43,7 @@ export default class Handler {
 	}
 
 	async openOrCreateMonthlyNote(e: MouseEvent): Promise<void> {
-		const tarDate = this.getTargetDate();
+		const tarDate = this.getTargetMonth();
 		if (!tarDate) {
 			new Notice(
 				'Target date not found.\nPlease check if the "Calendar" plugin is enabled.'
@@ -64,7 +64,7 @@ export default class Handler {
 	}
 
 	async openOrCreateYearlyNote(e: MouseEvent): Promise<void> {
-		const tarDate = this.getTargetDate();
+		const tarDate = this.getTargetYear();
 		if (!tarDate) {
 			new Notice(
 				'Target date not found.\nPlease check if the "Calendar" plugin is enabled.'
@@ -115,7 +115,7 @@ export default class Handler {
 		return index !== -1 ? index : null;
 	}
 
-	getTargetDate(): Date | null {
+	getTargetMonth(): Date | null {
 		const monthEl = this.getMonthElement();
 		const yearEl = this.getYearElement();
 
@@ -131,5 +131,21 @@ export default class Handler {
 		}
 
 		return new Date(year, month, 1);
+	}
+
+	getTargetYear(): Date | null {
+		const yearEl = this.getYearElement();
+
+		if (!yearEl) {
+			return null;
+		}
+		const year = parseInt(yearEl.textContent || "", 10);
+
+		if (isNaN(year)) {
+			console.error("Invalid month or year value.");
+			return null;
+		}
+
+		return new Date(year, 0, 1);
 	}
 }
