@@ -1,49 +1,26 @@
 import { Notice, Plugin } from "obsidian";
-import { off } from "process";
+import { tryToCreateMonthlyNote } from "./monthly";
+import moment from "moment";
 
 export default class Handler {
 	constructor(private readonly plugin: Plugin) {}
 
-	clickMonthHandler(e: MouseEvent): void {
-		if (!(e.target instanceof HTMLElement)) {
-			console.error("Event target is not an HTMLElement.");
-			return;
-		}
-
-		new Notice(`Month clicked! ${e.target.textContent}`);
-
-		const targetDate = this.getTargetDate();
-		if (!targetDate) {
+	async clickMonthHandler(e: MouseEvent): Promise<void> {
+		const tarDate = this.getTargetDate();
+		if (!tarDate) {
 			new Notice(
 				'Target date not found.\nPlease check if the "Calendar" plugin is enabled.'
 			);
 			return;
 		}
-
-		const offset = this.calcMonthOffset(targetDate);
-		if (offset < -1 || offset > 1) {
-			new Notice(
-				"You can only click on the current/next/previous month."
-			);
-			return;
-		}
-		const COMMAND_ID = [
-			"periodic-notes:prev-monthly-note",
-			"periodic-notes:open-monthly-note",
-			"periodic-notes:next-monthly-note",
-		][offset + 1];
-		const commands = (this.plugin.app as any).commands;
-		const exists = commands
-			.listCommands()
-			.some((cmd: any) => cmd.id === COMMAND_ID);
-
-		if (!exists) {
-			new Notice(
-				`Command "${COMMAND_ID}" does not exist.\nPlease check if the "Periodic Notes" plugin is enabled.`
-			);
-			return;
-		}
-		commands.executeCommandById(COMMAND_ID);
+		await tryToCreateMonthlyNote(
+			moment(tarDate),
+			false,
+			this.plugin.app.workspace,
+			(newFile) => {
+				new Notice(`Monthly note created: ${newFile.name}`);
+			}
+		);
 	}
 
 	addMonthClickListener() {
