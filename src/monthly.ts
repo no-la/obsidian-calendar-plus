@@ -1,43 +1,44 @@
 import type { Moment } from "moment";
-import { App, TFile, Vault, Workspace } from "obsidian";
-import { ISettings } from "./setting";
+import { TFile } from "obsidian";
 import { createConfirmationDialog } from "./modal";
+import CalendarPlusPlugin from "./main";
 
-/**
- * Create a Daily Note for a given date.
- */
-export const tryToCreateMonthlyNote = async (
-	date: Moment,
-	inNewSplit: boolean,
-	workspace: Workspace,
-	vault: Vault,
-	settings: ISettings,
-	app: App,
-	cb?: (newFile: TFile) => void
-): Promise<void> => {
-	const format = settings.MonthFormat;
-	const filename = date.format(format);
+export class Monthly {
+	constructor(private readonly plugin: CalendarPlusPlugin) {}
 
-	const createFile = async () => {
-		const monthlyNote = await vault.create(`${filename}.md`, "content");
+	async tryToCreateMonthlyNote(
+		date: Moment,
+		inNewSplit: boolean,
+		cb?: (newFile: TFile) => void
+	): Promise<void> {
+		const format = this.plugin.settings.MonthFormat;
+		const filename = date.format(format);
 
-		console.log("Created monthly note:", monthlyNote);
+		const createFile = async () => {
+			const monthlyNote = await this.createMonthlyNote(filename);
 
-		const leaf = workspace.getLeaf(inNewSplit);
-		await leaf.openFile(monthlyNote, { active: true });
-		cb?.(monthlyNote);
-	};
-	if (settings.shouldConfirmBeforeCreate) {
-		createConfirmationDialog(
-			{
-				cta: "Create",
-				onAccept: createFile,
-				text: `File ${filename} does not exist. Would you like to create it?`,
-				title: "New Monthly Note",
-			},
-			app
-		);
-	} else {
-		await createFile();
+			console.log("Created monthly note:", monthlyNote);
+
+			const leaf = this.plugin.app.workspace.getLeaf(inNewSplit);
+			await leaf.openFile(monthlyNote, { active: true });
+			cb?.(monthlyNote);
+		};
+		if (this.plugin.settings.shouldConfirmBeforeCreate) {
+			createConfirmationDialog(
+				{
+					cta: "Create",
+					onAccept: createFile,
+					text: `File ${filename} does not exist. Would you like to create it?`,
+					title: "New Monthly Note",
+				},
+				this.plugin.app
+			);
+		} else {
+			await createFile();
+		}
 	}
-};
+
+	private async createMonthlyNote(filename: string): Promise<TFile> {
+		return await this.plugin.app.vault.create(`${filename}.md`, "content");
+	}
+}

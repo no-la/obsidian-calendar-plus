@@ -1,10 +1,13 @@
 import { Notice } from "obsidian";
-import { tryToCreateMonthlyNote } from "./monthly";
+import { Monthly } from "./monthly";
 import moment from "moment";
 import CalendarPlusPlugin from "./main";
 
 export default class Handler {
-	constructor(private readonly plugin: CalendarPlusPlugin) {}
+	monthly: Monthly;
+	constructor(private readonly plugin: CalendarPlusPlugin) {
+		this.monthly = new Monthly(this.plugin);
+	}
 
 	async clickMonthHandler(e: MouseEvent): Promise<void> {
 		const tarDate = this.getTargetDate();
@@ -14,14 +17,7 @@ export default class Handler {
 			);
 			return;
 		}
-		await tryToCreateMonthlyNote(
-			moment(tarDate),
-			false,
-			this.plugin.app.workspace,
-			this.plugin.app.vault,
-			this.plugin.settings,
-			this.plugin.app
-		);
+		await this.monthly.tryToCreateMonthlyNote(moment(tarDate), false);
 	}
 
 	addMonthClickListener() {
