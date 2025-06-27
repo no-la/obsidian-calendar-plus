@@ -25,7 +25,7 @@ export default class Handler {
 		this.plugin.registerDomEvent(
 			monthEl,
 			"click",
-			this.clickMonthHandler.bind(this)
+			this.openOrCreateMonthlyNote.bind(this)
 		);
 	}
 
@@ -42,11 +42,11 @@ export default class Handler {
 		this.plugin.registerDomEvent(
 			yearEl,
 			"click",
-			this.clickYearHandler.bind(this)
+			this.openOrCreateYearlyNote.bind(this)
 		);
 	}
 
-	async clickMonthHandler(e: MouseEvent): Promise<void> {
+	async openOrCreateMonthlyNote(e: MouseEvent): Promise<void> {
 		const tarDate = this.getTargetDate();
 		if (!tarDate) {
 			new Notice(
@@ -67,7 +67,7 @@ export default class Handler {
 		}
 	}
 
-	async clickYearHandler(e: MouseEvent): Promise<void> {
+	async openOrCreateYearlyNote(e: MouseEvent): Promise<void> {
 		const tarDate = this.getTargetDate();
 		if (!tarDate) {
 			new Notice(
