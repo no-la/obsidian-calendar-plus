@@ -49,20 +49,12 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 		this.containerEl.createEl("h3", {
 			text: "Monthly Note Settings",
 		});
-		this.containerEl.createEl("p", {
-			cls: "setting-item-description",
-			text: "Note: Monthly Note settings are moving.",
-		});
 		this.addMonthlyNoteFormatSetting();
 		this.addMonthlyNoteTemplateSetting();
 		this.addMonthlyNoteFolderSetting();
 
 		this.containerEl.createEl("h3", {
 			text: "Yearly Note Settings",
-		});
-		this.containerEl.createEl("p", {
-			cls: "setting-item-description",
-			text: "Note: Yearly Note settings are moving.",
 		});
 		this.addYearlyNoteFormatSetting();
 		this.addYearlyNoteTemplateSetting();
@@ -101,7 +93,7 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 		new Setting(this.containerEl)
 			.setName("Monthly note template")
 			.setDesc(
-				"Choose the file you want to use as the template for your monthly notes"
+				"Choose the file you want to use as the template for your monthly notes (example: MyTemplate.md)"
 			)
 			.addText((textfield) => {
 				textfield.setValue(
@@ -118,7 +110,9 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 	addMonthlyNoteFolderSetting(): void {
 		new Setting(this.containerEl)
 			.setName("Monthly note folder")
-			.setDesc("New monthly notes will be placed here")
+			.setDesc(
+				"New monthly notes will be placed here (You should create the foloder in advance)"
+			)
 			.addText((textfield) => {
 				textfield.setValue(this.plugin.settings.MonthlyNoteFolder);
 				textfield.onChange(async (value) => {
@@ -148,7 +142,7 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 		new Setting(this.containerEl)
 			.setName("Yearly note template")
 			.setDesc(
-				"Choose the file you want to use as the template for your yearly notes"
+				"Choose the file you want to use as the template for your yearly notes (example: MyTemplate.md)"
 			)
 			.addText((textfield) => {
 				textfield.setValue(this.plugin.settings.YearlyNoteTemplate);
@@ -163,7 +157,9 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 	addYearlyNoteFolderSetting(): void {
 		new Setting(this.containerEl)
 			.setName("Yearly note folder")
-			.setDesc("New yearly notes will be placed here")
+			.setDesc(
+				"New yearly notes will be placed here (You should create the foloder in advance)"
+			)
 			.addText((textfield) => {
 				textfield.setValue(this.plugin.settings.YearlyNoteFolder);
 				textfield.onChange(async (value) => {
