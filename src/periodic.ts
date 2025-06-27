@@ -22,13 +22,7 @@ export class Periodic {
 	}
 
 	async tryToGetExistingPeriodicNote(date: Moment): Promise<TFile | null> {
-		const filename = date.format(this.format);
-		const path = this.folder
-			? `${this.folder}/${filename}.md`
-			: `${filename}.md`;
-		const file = this.plugin.app.vault.getFileByPath(path);
-
-		return file;
+		return this.plugin.app.vault.getFileByPath(this.fullPath(date));
 	}
 
 	async tryToCreatePeriodicNote(
@@ -36,10 +30,8 @@ export class Periodic {
 		inNewSplit: boolean,
 		cb?: (newFile: TFile) => void
 	): Promise<void> {
-		const filename = date.format(this.format);
-
 		const createFile = async () => {
-			const periodicNote = await this.createPeriodicNote(filename, date);
+			const periodicNote = await this.createPeriodicNote(date);
 
 			console.log(`Created ${this.type} note:`, periodicNote);
 
@@ -52,7 +44,9 @@ export class Periodic {
 				{
 					cta: "Create",
 					onAccept: createFile,
-					text: `File ${filename} does not exist. Would you like to create it?`,
+					text: `File ${this.fullPath(
+						date
+					)} does not exist. Would you like to create it?`,
 					title: `New ${this.type} Note`,
 				},
 				this.plugin.app
@@ -62,10 +56,7 @@ export class Periodic {
 		}
 	}
 
-	private async createPeriodicNote(
-		filename: string,
-		date: Moment
-	): Promise<TFile> {
+	private async createPeriodicNote(date: Moment): Promise<TFile> {
 		let content = "";
 		if (this.template) {
 			const templateFile = this.plugin.app.vault.getFileByPath(
@@ -78,7 +69,13 @@ export class Periodic {
 			content = this.replaceNormalDatePlaceholders(content, date);
 			content = this.replaceComplexDatePlaceholders(content, date);
 		}
-		return await this.plugin.app.vault.create(`${filename}.md`, content);
+		return await this.plugin.app.vault.create(this.fullPath(date), content);
+	}
+
+	private fullPath(date: Moment): string {
+		return this.folder
+			? `${this.folder}/${date.format(this.format)}.md`
+			: `${date.format(this.format)}.md`;
 	}
 
 	private replaceNormalDatePlaceholders(
