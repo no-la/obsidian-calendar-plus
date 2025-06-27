@@ -76,7 +76,7 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 	}
 	addMonthlyNoteFormatSetting(): void {
 		new Setting(this.containerEl)
-			.setName("Monthly note format")
+			.setName("Month format")
 			.setDesc("For more syntax help, refer to format reference")
 			.addText((textfield) => {
 				textfield.setValue(this.plugin.settings.MonthFormat);
@@ -125,7 +125,7 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 
 	addYearlyNoteFormatSetting(): void {
 		new Setting(this.containerEl)
-			.setName("Yearly note format")
+			.setName("Year format")
 			.setDesc("For more syntax help, refer to format reference")
 			.addText((textfield) => {
 				textfield.setValue(this.plugin.settings.YearFormat);
