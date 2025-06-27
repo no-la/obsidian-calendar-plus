@@ -17,7 +17,7 @@ export default class Handler {
 			);
 			return;
 		}
-		await this.monthly.tryToCreateMonthlyNote(moment(tarDate), false);
+		await this.monthly.tryToCreatePeriodicNote(moment(tarDate), false);
 	}
 
 	addMonthClickListener() {
