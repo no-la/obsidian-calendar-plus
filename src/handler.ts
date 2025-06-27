@@ -39,19 +39,6 @@ export default class Handler {
 		);
 	}
 
-	calcMonthOffset(date: Date): number {
-		const currentDate = new Date();
-		const currentNum =
-			currentDate.getFullYear() * 12 + currentDate.getMonth();
-		const targetNum = date.getFullYear() * 12 + date.getMonth();
-		return targetNum - currentNum;
-	}
-
-	calcYearOffset(date: Date): number {
-		const currentDate = new Date();
-		return date.getFullYear() - currentDate.getFullYear();
-	}
-
 	getMonthElement(): HTMLElement | null {
 		return document.querySelector(
 			"#calendar-container > div > h3 > span.month.svelte-1vwr9dd"
