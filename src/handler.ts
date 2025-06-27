@@ -12,13 +12,10 @@ export default class Handler {
 		this.yearly = new Yearly(this.plugin);
 	}
 
-	addMonthClickListener() {
+	addMonthClickListener(): boolean {
 		const monthEl = this.getMonthElement();
 		if (!monthEl) {
-			new Notice(
-				'Month element not found.\nPlease check if the "Calendar" plugin is enabled.'
-			);
-			return;
+			return false;
 		}
 
 		monthEl.addClass("calendar-plus-button");
@@ -27,15 +24,13 @@ export default class Handler {
 			"click",
 			this.openOrCreateMonthlyNote.bind(this)
 		);
+		return true;
 	}
 
-	addYearClickListener() {
+	addYearClickListener(): boolean {
 		const yearEl = this.getYearElement();
 		if (!yearEl) {
-			new Notice(
-				'Month element not found.\nPlease check if the "Calendar" plugin is enabled.'
-			);
-			return;
+			return false;
 		}
 
 		yearEl.addClass("calendar-plus-button");
@@ -44,6 +39,7 @@ export default class Handler {
 			"click",
 			this.openOrCreateYearlyNote.bind(this)
 		);
+		return true;
 	}
 
 	async openOrCreateMonthlyNote(e: MouseEvent): Promise<void> {

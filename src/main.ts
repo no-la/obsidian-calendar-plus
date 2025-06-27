@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import { Notice, Plugin } from "obsidian";
 import Handler from "./handler";
 import { CalendarPlusSettingsTab, defaultSettings, ISettings } from "./setting";
 
@@ -10,10 +10,30 @@ export default class CalendarPlusPlugin extends Plugin {
 		await this.loadSettings();
 
 		this.handler = new Handler(this);
-		this.handler.addMonthClickListener();
-		this.handler.addYearClickListener();
-		// This adds an editor command that can perform some operation on the current editor instance
-		// This adds a settings tab so the user can configure various aspects of the plugin
+		const monthInterval = window.setInterval(() => {
+			if (this.handler.addMonthClickListener()) {
+				clearInterval(monthInterval);
+				new Notice("Calendar Plus: Successfuly set Month button");
+			} else {
+				new Notice(
+					"Calendar Plus: Please enable Calendar plugin or disable Calendar Plus plugin"
+				);
+			}
+		}, 5000);
+		this.registerInterval(monthInterval);
+		const yearInterval = window.setInterval(() => {
+			if (this.handler.addYearClickListener()) {
+				clearInterval(yearInterval);
+				new Notice("Calendar Plus: Successfuly set Year button");
+			} else {
+				new Notice(
+					"Calendar Plus: Please enable Calendar plugin or disable Calendar Plus plugin"
+				);
+			}
+		}, 5000);
+		this.registerInterval(monthInterval);
+		this.registerInterval(yearInterval);
+
 		this.addSettingTab(new CalendarPlusSettingsTab(this.app, this));
 	}
 
