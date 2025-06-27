@@ -1,11 +1,5 @@
-import {
-	App,
-	Modal,
-	Notice,
-	Plugin,
-	PluginSettingTab,
-	Setting,
-} from "obsidian";
+import { App, Modal, Plugin, PluginSettingTab, Setting } from "obsidian";
+import Handler from "./handler";
 
 // Remember to rename these classes and interfaces!
 
@@ -19,11 +13,13 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
+	handler: Handler;
 
 	async onload() {
 		await this.loadSettings();
 
-		this.addMonthClickListener();
+		this.handler = new Handler(this);
+		this.handler.addMonthClickListener();
 
 		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
@@ -54,35 +50,6 @@ export default class MyPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-
-	addMonthClickListener() {
-		const monthEl = document.querySelector(
-			"#calendar-container > div > h3 > span.month.svelte-1vwr9dd"
-		);
-		// const yearEl = document.querySelector(
-		// 	"#calendar-container > div > h3 > span.month.svelte-1vwr9dd"
-		// );
-		if (!monthEl) {
-			console.error("Month element not found.");
-			return;
-		}
-
-		monthEl.addEventListener("click", () => {
-			new Notice("Month clicked!");
-			const COMMAND_ID = "periodic-notes:open-monthly-note";
-			const commands = (this.app as any).commands;
-			const exists = commands
-				.listCommands()
-				.some((cmd: any) => cmd.id === COMMAND_ID);
-
-			if (!exists) {
-				new Notice(`Command with ID "${COMMAND_ID}" does not exist.`);
-				return;
-			}
-
-			commands.executeCommandById(COMMAND_ID);
-		});
 	}
 }
 
