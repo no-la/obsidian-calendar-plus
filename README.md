@@ -11,6 +11,9 @@
 
 通常の方法で、ビルド、デプロイをして、上記を確認した上で使用してください。
 
+> [!NOTE]
+> 設定の変更が反映されない場合、Options > Community plugins > Installed plugins のトグルを切り替えて、Calendar Plus をリロードしてください。
+
 ## Template について
 
 Monthly note、Yearly note それぞれについて、テンプレートを作ることが出来ます。
@@ -21,3 +24,5 @@ Monthly note、Yearly note それぞれについて、テンプレートを作�
 
 例えば、`{{date:🕰️YYYY-MM}}` というプレースホルダーは、2025/06 の note において、`🕰️2025-06` に変換されます。
 また、`{{date}}` については、Month Format、Year Format で指定したフォーマットで変換されます。
+
+
