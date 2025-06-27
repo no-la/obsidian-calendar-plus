@@ -11,11 +11,10 @@ export class Monthly {
 		inNewSplit: boolean,
 		cb?: (newFile: TFile) => void
 	): Promise<void> {
-		const format = this.plugin.settings.MonthFormat;
-		const filename = date.format(format);
+		const filename = date.format(this.plugin.settings.MonthFormat);
 
 		const createFile = async () => {
-			const monthlyNote = await this.createMonthlyNote(filename);
+			const monthlyNote = await this.createMonthlyNote(filename, date);
 
 			console.log("Created monthly note:", monthlyNote);
 
@@ -38,7 +37,55 @@ export class Monthly {
 		}
 	}
 
-	private async createMonthlyNote(filename: string): Promise<TFile> {
-		return await this.plugin.app.vault.create(`${filename}.md`, "content");
+	private async createMonthlyNote(
+		filename: string,
+		date: Moment
+	): Promise<TFile> {
+		let content = "";
+		if (this.plugin.settings.MonthlyNoteTemplate) {
+			const templateFile = this.plugin.app.vault.getFileByPath(
+				this.plugin.settings.MonthlyNoteTemplate
+			);
+			if (!templateFile) {
+				throw new Error(
+					`Template file not found: ${this.plugin.settings.MonthlyNoteTemplate}`
+				);
+			}
+			content = await this.plugin.app.vault.cachedRead(templateFile);
+			content = this.replaceNormalDatePlaceholders(content, date);
+			content = this.replaceComplexDatePlaceholders(content, date);
+		}
+		return await this.plugin.app.vault.create(`${filename}.md`, content);
+	}
+
+	private replaceNormalDatePlaceholders(
+		template: string,
+		date: Moment
+	): string {
+		return template.replace(
+			/{{date}}/g,
+			date.format(this.plugin.settings.MonthFormat)
+		);
+	}
+
+	private replaceComplexDatePlaceholders(
+		template: string,
+		date: Moment
+	): string {
+		return template.replace(/\{\{date:(.*?)\}\}/g, (_, format) => {
+			const escapedFormat = format
+				.replace(/\[/g, "\\[")
+				.replace(/\]/g, "\\]");
+
+			console.log(
+				"Replacing date with format:",
+				escapedFormat,
+				"for date:",
+				date.format(),
+				"->",
+				date.format(escapedFormat)
+			);
+			return date.format(escapedFormat);
+		});
 	}
 }
