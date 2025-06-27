@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 
-import { DEFAULT_MONTH_FORMAT } from "./constants";
+import { DEFAULT_MONTH_FORMAT, DEFAULT_YEAR_FORMAT } from "./constants";
 
 import type CalendarPlugin from "./main";
 import CalendarPlusPlugin from "./main";
@@ -12,6 +12,10 @@ export interface ISettings {
 	MonthFormat: string;
 	MonthlyNoteTemplate: string;
 	MonthlyNoteFolder: string;
+
+	YearFormat: string;
+	YearlyNoteTemplate: string;
+	YearlyNoteFolder: string;
 }
 
 export const defaultSettings = Object.freeze({
@@ -20,6 +24,10 @@ export const defaultSettings = Object.freeze({
 	MonthFormat: DEFAULT_MONTH_FORMAT,
 	MonthlyNoteFolder: "",
 	MonthlyNoteTemplate: "",
+
+	YearFormat: DEFAULT_YEAR_FORMAT,
+	YearlyNoteFolder: "",
+	YearlyNoteTemplate: "",
 });
 
 export class CalendarPlusSettingsTab extends PluginSettingTab {
@@ -48,6 +56,17 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 		this.addMonthlyNoteFormatSetting();
 		this.addMonthlyNoteTemplateSetting();
 		this.addMonthlyNoteFolderSetting();
+
+		this.containerEl.createEl("h3", {
+			text: "Yearly Note Settings",
+		});
+		this.containerEl.createEl("p", {
+			cls: "setting-item-description",
+			text: "Note: Yearly Note settings are moving.",
+		});
+		this.addYearlyNoteFormatSetting();
+		this.addYearlyNoteTemplateSetting();
+		this.addYearlyNoteFolderSetting();
 	}
 
 	addConfirmCreateSetting(): void {
@@ -105,6 +124,51 @@ export class CalendarPlusSettingsTab extends PluginSettingTab {
 				textfield.onChange(async (value) => {
 					this.plugin.writeOptions({
 						MonthlyNoteFolder: value,
+					});
+				});
+			});
+	}
+
+	addYearlyNoteFormatSetting(): void {
+		new Setting(this.containerEl)
+			.setName("Yearly note format")
+			.setDesc("For more syntax help, refer to format reference")
+			.addText((textfield) => {
+				textfield.setValue(this.plugin.settings.YearFormat);
+				textfield.setPlaceholder(DEFAULT_YEAR_FORMAT);
+				textfield.onChange(async (value) => {
+					this.plugin.writeOptions({
+						YearFormat: value,
+					});
+				});
+			});
+	}
+
+	addYearlyNoteTemplateSetting(): void {
+		new Setting(this.containerEl)
+			.setName("Yearly note template")
+			.setDesc(
+				"Choose the file you want to use as the template for your yearly notes"
+			)
+			.addText((textfield) => {
+				textfield.setValue(this.plugin.settings.YearlyNoteTemplate);
+				textfield.onChange(async (value) => {
+					this.plugin.writeOptions({
+						YearlyNoteTemplate: value,
+					});
+				});
+			});
+	}
+
+	addYearlyNoteFolderSetting(): void {
+		new Setting(this.containerEl)
+			.setName("Yearly note folder")
+			.setDesc("New yearly notes will be placed here")
+			.addText((textfield) => {
+				textfield.setValue(this.plugin.settings.YearlyNoteFolder);
+				textfield.onChange(async (value) => {
+					this.plugin.writeOptions({
+						YearlyNoteFolder: value,
 					});
 				});
 			});

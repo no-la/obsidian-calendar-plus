@@ -2,11 +2,14 @@ import { Notice } from "obsidian";
 import { Monthly } from "./monthly";
 import moment from "moment";
 import CalendarPlusPlugin from "./main";
+import { Yearly } from "./yearly";
 
 export default class Handler {
 	monthly: Monthly;
+	yearly: Yearly;
 	constructor(private readonly plugin: CalendarPlusPlugin) {
 		this.monthly = new Monthly(this.plugin);
+		this.yearly = new Yearly(this.plugin);
 	}
 
 	async clickMonthHandler(e: MouseEvent): Promise<void> {
@@ -32,9 +35,6 @@ export default class Handler {
 
 	addMonthClickListener() {
 		const monthEl = this.getMonthElement();
-		// const yearEl = document.querySelector(
-		// 	"#calendar-container > div > h3 > span.month.svelte-1vwr9dd"
-		// );
 		if (!monthEl) {
 			new Notice(
 				'Month element not found.\nPlease check if the "Calendar" plugin is enabled.'
@@ -46,6 +46,43 @@ export default class Handler {
 			monthEl,
 			"click",
 			this.clickMonthHandler.bind(this)
+		);
+	}
+
+	async clickYearHandler(e: MouseEvent): Promise<void> {
+		const tarDate = this.getTargetDate();
+		if (!tarDate) {
+			new Notice(
+				'Target date not found.\nPlease check if the "Calendar" plugin is enabled.'
+			);
+			return;
+		}
+		const tarDateMoment = moment(tarDate);
+		const existingNote = await this.yearly.tryToGetExistingPeriodicNote(
+			tarDateMoment
+		);
+		if (existingNote) {
+			await this.plugin.app.workspace
+				.getLeaf(false)
+				.openFile(existingNote, { active: true });
+		} else {
+			await this.yearly.tryToCreatePeriodicNote(tarDateMoment, false);
+		}
+	}
+
+	addYearClickListener() {
+		const yearEl = this.getYearElement();
+		if (!yearEl) {
+			new Notice(
+				'Month element not found.\nPlease check if the "Calendar" plugin is enabled.'
+			);
+			return;
+		}
+
+		this.plugin.registerDomEvent(
+			yearEl,
+			"click",
+			this.clickYearHandler.bind(this)
 		);
 	}
 

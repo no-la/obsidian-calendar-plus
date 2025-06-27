@@ -11,6 +11,7 @@ export default class CalendarPlusPlugin extends Plugin {
 
 		this.handler = new Handler(this);
 		this.handler.addMonthClickListener();
+		this.handler.addYearClickListener();
 		// This adds an editor command that can perform some operation on the current editor instance
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new CalendarPlusSettingsTab(this.app, this));
