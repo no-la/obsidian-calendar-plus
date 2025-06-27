@@ -71,6 +71,18 @@ export default class MyPlugin extends Plugin {
 
 		monthEl.addEventListener("click", () => {
 			new Notice("Month clicked!");
+			const COMMAND_ID = "periodic-notes:open-monthly-note";
+			const commands = (this.app as any).commands;
+			const exists = commands
+				.listCommands()
+				.some((cmd: any) => cmd.id === COMMAND_ID);
+
+			if (!exists) {
+				new Notice(`Command with ID "${COMMAND_ID}" does not exist.`);
+				return;
+			}
+
+			commands.executeCommandById(COMMAND_ID);
 		});
 	}
 }
