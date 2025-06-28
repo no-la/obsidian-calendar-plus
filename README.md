@@ -10,7 +10,7 @@
 - [Obsidian Calendar](https://github.com/liamcain/obsidian-calendar-plugin) のカレンダーが開かれていること
 
 
-このリポジトリをcloenし、ルートディレクトリで
+このリポジトリを clone し、ルートディレクトリで
 
 ```sh
 npm install
