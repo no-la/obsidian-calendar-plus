@@ -2,7 +2,7 @@
 
 [Obsidian Calendar](https://github.com/liamcain/obsidian-calendar-plugin) を拡張するためのプラグインです。
 
-具体的には、Monthly note と Yearly note の作成・表示のためのボタンを、Obsidian Calendar で使われるカレンダーの「月」と「年」の HTML 要素に付け加えます。
+具体的には、Monthly note と Yearly note の作成・表示のためのボタンを、[Obsidian Calendar](https://github.com/liamcain/obsidian-calendar-plugin) で使われるカレンダーの「月」と「年」の HTML 要素に付け加えます。
 
 したがって、このプラグインを使うためには以下が必要です。
 
