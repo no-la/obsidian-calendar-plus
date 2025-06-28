@@ -7,7 +7,8 @@ export class Monthly extends Periodic {
 			plugin,
 			plugin.settings.MonthFormat,
 			plugin.settings.MonthlyNoteTemplate,
-			plugin.settings.MonthlyNoteFolder
+			plugin.settings.MonthlyNoteFolder,
+			"Monthly"
 		);
 	}
 }

@@ -7,7 +7,8 @@ export class Yearly extends Periodic {
 			plugin,
 			plugin.settings.YearFormat,
 			plugin.settings.YearlyNoteTemplate,
-			plugin.settings.YearlyNoteFolder
+			plugin.settings.YearlyNoteFolder,
+			"Yearly"
 		);
 	}
 }
