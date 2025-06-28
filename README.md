@@ -9,7 +9,15 @@
 - [Obsidian Calendar](https://github.com/liamcain/obsidian-calendar-plugin) が入っていること
 - [Obsidian Calendar](https://github.com/liamcain/obsidian-calendar-plugin) のカレンダーが開かれていること
 
-通常の方法で、ビルド、デプロイをして、上記を確認した上で使用してください。
+
+このリポジトリをcloenし、ルートディレクトリで
+
+```sh
+npm install
+npm run build
+```
+
+を実行後、`Your Vault/.obsidian/plugins/calendar-plus/` に `main.js`、`manifest.json`、`style.css` をコピーして使用してください。
 
 > [!NOTE]
 > 設定の変更が反映されない場合、Options > Community plugins > Installed plugins のトグルを切り替えて、Calendar Plus をリロードしてください。
