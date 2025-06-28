@@ -10,7 +10,7 @@
 - [Obsidian Calendar](https://github.com/liamcain/obsidian-calendar-plugin) のカレンダーが開かれていること
 
 
-## 使い方
+## 導入
 
 このリポジトリを clone し、ルートディレクトリで
 
