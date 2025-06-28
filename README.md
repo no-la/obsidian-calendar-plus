@@ -22,6 +22,8 @@ npm run build
 を実行後、`Your Vault/.obsidian/plugins/calendar-plus/` に `main.js`、`manifest.json`、`style.css` をコピーしてください。
 その後、他のプラグインと同様の操作で使用することが出来ます。
 
+起動後数秒後にポップアップが表示され、ボタンが使えるようになります。
+
 > [!NOTE]
 > 設定の変更が反映されない場合、Options > Community plugins > Installed plugins のトグルを切り替えて、Calendar Plus をリロードしてください。
 
