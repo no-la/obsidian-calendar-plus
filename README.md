@@ -33,7 +33,7 @@ Monthly note、Yearly note それぞれについて、テンプレートを作�
 - `{{date}}`
 - `{{date:YYYY-MM-DD}}`
 
-例えば、`{{date:🕰️YYYY-MM}}` というプレースホルダーは、2025/06 の note において、`🕰️2025-06` に変換されます。
+例えば、`{{date:🕰️YYYY-MM-DD}}` というプレースホルダーは、2025/06 の Monthly note において、`🕰️2025-06-01` に変換されます。
 また、`{{date}}` については、Month Format、Year Format で指定したフォーマットで変換されます。
 
 
