@@ -1,43 +1,69 @@
-import { Notice, Plugin } from "obsidian";
+import { Notice, Plugin, WorkspaceLeaf } from "obsidian";
 import Handler from "./handler";
 import { CalendarPlusSettingsTab, defaultSettings, ISettings } from "./setting";
+import { VIEW_TYPE_CALENDAR } from "./constants";
 
 export default class CalendarPlusPlugin extends Plugin {
 	settings: ISettings;
 	handler: Handler;
+	currentCalendarView: WorkspaceLeaf;
+	isMonthActive = false;
+	isYearActive = false;
 
 	async onload() {
 		await this.loadSettings();
 
 		this.handler = new Handler(this);
-		const monthInterval = window.setInterval(() => {
-			if (this.handler.addMonthClickListener()) {
-				clearInterval(monthInterval);
-				new Notice("Calendar Plus: Successfuly set Month button");
-			} else {
+
+		const fetchCalendarViewInterval = window.setInterval(() => {
+			const view = this.getCalendarView();
+
+			if (view === null) {
 				new Notice(
-					"Calendar Plus: Please enable Calendar plugin or disable Calendar Plus plugin"
+					"⚠️Calendar Plus: Please enable Calendar plugin or disable Calendar Plus plugin"
 				);
+				return;
 			}
-		}, 5000);
-		this.registerInterval(monthInterval);
-		const yearInterval = window.setInterval(() => {
-			if (this.handler.addYearClickListener()) {
-				clearInterval(yearInterval);
-				new Notice("Calendar Plus: Successfuly set Year button");
-			} else {
-				new Notice(
-					"Calendar Plus: Please enable Calendar plugin or disable Calendar Plus plugin"
-				);
+
+			if (view !== this.currentCalendarView) {
+				this.isMonthActive = false;
+				this.isYearActive = false;
+				this.currentCalendarView = view;
 			}
-		}, 5000);
-		this.registerInterval(monthInterval);
-		this.registerInterval(yearInterval);
+
+			if (this.isMonthActive && this.isYearActive) {
+				return;
+			}
+
+			if (!this.isMonthActive) {
+				this.isMonthActive = this.handler.addMonthClickListener();
+				if (this.isMonthActive) {
+					new Notice("Successfuly add month click listener");
+				} else {
+					new Notice("Failed to add month click listener");
+				}
+			}
+			if (!this.isYearActive) {
+				this.isYearActive = this.handler.addYearClickListener();
+				if (this.isMonthActive) {
+					new Notice("Successfuly add year click listener");
+				} else {
+					new Notice("Failed to add year click listener");
+				}
+			}
+		}, 3000);
+		this.registerInterval(fetchCalendarViewInterval);
 
 		this.addSettingTab(new CalendarPlusSettingsTab(this.app, this));
 	}
 
 	onunload() {}
+
+	getCalendarView(): WorkspaceLeaf | null {
+		return (
+			this.app.workspace.getLeavesOfType(VIEW_TYPE_CALENDAR).at(0) ?? null
+		);
+	}
 
 	async loadSettings() {
 		this.settings = Object.assign(
