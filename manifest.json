@@ -1,11 +1,10 @@
 {
 	"id": "calendar-plus",
 	"name": "Calendar Plus",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
 	"description": "Add buttons to open monthly and yearly note to Calendar view of Calendar plugin",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"author": "no-la",
+	"authorUrl": "https://github.com/no-la",
 	"isDesktopOnly": false
 }
