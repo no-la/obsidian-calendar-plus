@@ -2,41 +2,32 @@ name: Release
 
 on:
   push:
-    tags:
-      - "*"
+    branches: [master]
+    paths:
+      - manifest.json
 
-env:
-  PLUGIN_NAME: obsidian-calendar-plus
+permissions:
+  contents: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
-
-      - name: Build plugin
-        run: |
-          npm install
-          npm run build
-
-      - name: Create release archive
-        run: |
-          mkdir ${{ env.PLUGIN_NAME }}
-          cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
-          zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-
-      - name: Create release
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: node esbuild.config.mjs production
+      - name: Get version from manifest
+        id: version
+        run: echo "version=$(jq -r .version manifest.json)" >> $GITHUB_OUTPUT
+      - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          tag="${GITHUB_REF#refs/tags/}"
-          gh release create "$tag" \
-            --title "$tag" \
-            --draft \
-            main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}.zip
+          gh release create "${{ steps.version.outputs.version }}" \
+            main.js manifest.json styles.css \
+            --title "v${{ steps.version.outputs.version }}" \
+            --generate-notes
