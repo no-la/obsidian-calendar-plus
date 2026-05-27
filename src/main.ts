@@ -15,7 +15,7 @@ export default class CalendarPlusPlugin extends Plugin {
 
 		this.handler = new Handler(this);
 
-		const fetchCalendarViewInterval = window.setInterval(() => {
+		const tryRegister = () => {
 			const view = this.getCalendarView();
 
 			if (view === null) {
@@ -31,28 +31,35 @@ export default class CalendarPlusPlugin extends Plugin {
 				this.currentCalendarView = view;
 			}
 
+			// 同一 leaf でも Svelte が DOM を再生成した場合を検出
+			const monthEl = this.handler.getMonthElement();
+			if (monthEl && !monthEl.hasClass("calendar-plus-button")) {
+				this.isMonthActive = false;
+			}
+			const yearEl = this.handler.getYearElement();
+			if (yearEl && !yearEl.hasClass("calendar-plus-button")) {
+				this.isYearActive = false;
+			}
+
 			if (this.isMonthActive && this.isYearActive) {
 				return;
 			}
 
 			if (!this.isMonthActive) {
 				this.isMonthActive = this.handler.addMonthClickListener();
-				if (this.isMonthActive) {
-					new Notice("Successfuly add month click listener");
-				} else {
-					new Notice("Failed to add month click listener");
-				}
 			}
 			if (!this.isYearActive) {
 				this.isYearActive = this.handler.addYearClickListener();
-				if (this.isMonthActive) {
-					new Notice("Successfuly add year click listener");
-				} else {
-					new Notice("Failed to add year click listener");
-				}
 			}
-		}, 3000);
-		this.registerInterval(fetchCalendarViewInterval);
+		};
+
+		// ワークスペース切り替え時に即時再登録
+		this.registerEvent(
+			this.app.workspace.on("layout-change", tryRegister)
+		);
+
+		// フォールバック用ポーリング（Calendar の遅延レンダリング対策）
+		this.registerInterval(window.setInterval(tryRegister, 3000));
 
 		this.addSettingTab(new CalendarPlusSettingsTab(this.app, this));
 	}
