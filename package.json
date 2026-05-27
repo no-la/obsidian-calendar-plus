@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-calendar-plus",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "This is a plugin to add Monthly and Yearly note to Calenadr plugin",
 	"main": "main.js",
 	"scripts": {
